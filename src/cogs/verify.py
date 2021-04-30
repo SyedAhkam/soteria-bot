@@ -7,8 +7,10 @@ from discord.ext import commands
 
 from models import Guild, Config, ConfigType, VerificationMethod
 from captcha import Captcha
+from utils.extras import format_placeholders
 
-#TODO: allow users to customize verification method
+#TODO: allow users to customize verification message
+#TODO: allow users to use placeholders in message like {guild_name}
 
 class Verify(commands.Cog):
     """Main verification"""
@@ -46,15 +48,37 @@ class Verify(commands.Cog):
 
         return verified_role
 
-    async def display_captcha(self, captcha_file: discord.File, channel: typing.Union[discord.TextChannel, discord.DMChannel], mention=None):
+    async def display_captcha(self, captcha_file: discord.File, channel: typing.Union[discord.TextChannel, discord.DMChannel], guild: discord.Guild, member: discord.member, mention=None):
         """Displays the captcha in an embed"""
+        
+        guild_obj = await Guild.get(id=guild.id) 
+
+        # fetch the verification message for start, if not set; use default
+        verification_message = await Config.get_value_str(guild_obj, ConfigType.VERIFICATION_MESSAGE_START)
+        if not verification_message:
+            verification_message = "The server you just joined requires manual verification.\n\n**Just reply me with the characters displayed below.**"
+
+        formatted_verification_message = format_placeholders(
+            verification_message,
+            {
+                "guild_name": guild.name,
+                "guild_id": guild.id,
+                "guild_total_members": len(guild.members),
+                "guild_humans": len([member for member in guild.members if not member.bot]),
+                "member_name": member.name,
+                "member_id": member.id,
+                "member_mention": member.mention,
+                "member_tag": str(member),
+                "member_discrim": member.discriminator
+            }
+        )
 
         embed = self.embed_gen.get_normal_embed(
             title="Verification Required",
-            description="The server you just joined requires manual verification.\n\n**Just reply me with the characters displayed below.**"
+            description=formatted_verification_message
         )
         embed.set_image(url="attachment://captcha.png")
-        embed.set_footer(text="This prompt will timeout in 60 secs", icon_url=self.bot.user.avatar_url)
+        embed.set_footer(text=f"This prompt will timeout in 60 secs | {guild}", icon_url=self.bot.user.avatar_url)
 
         await channel.send(f"{mention or ''}", embed=embed, file=captcha_file)
 
@@ -83,7 +107,8 @@ class Verify(commands.Cog):
         try:
             reply_msg = await self.bot.wait_for("message", check=lambda m:m.author == member_or_user and m.channel == channel, timeout=60)
         except:
-            await self.on_timeout(member_or_user, channel, guild)
+            await self.on_timeout(channel, guild, mention=mention)
+            return
 
         # Dangerous recursion here
         if reply_msg.content.upper() == "Y":
@@ -92,7 +117,7 @@ class Verify(commands.Cog):
         elif reply_msg.content.upper() == "N":
             await channel.send("Bye! You can start the verification process again using the command `verify`")
         else:
-            await self.on_fail(member_or_user, channel, guild)
+            await self.on_fail(member_or_user, channel, guild, mention=mention)
 
 
     async def on_success(self, member_or_user: typing.Union[discord.Member, discord.User], channel: typing.Union[discord.TextChannel, discord.DMChannel], guild: discord.Guild, mention=None):
@@ -101,10 +126,35 @@ class Verify(commands.Cog):
         member = guild.get_member(member_or_user.id) # make sure we have a member object
 
         role = await self.add_verified_role(member)
-        
+
+        guild_obj = await Guild.get(id=guild.id) 
+
+        # fetch the verification message for success, if not set; use default
+        verification_message = await Config.get_value_str(guild_obj, ConfigType.VERIFICATION_MESSAGE_SUCCESS)
+        if not verification_message:
+            verification_message = "Good Job! You have been verified!\n\n**I have given you the role `{verified_role_name}`**"
+       
+        formatted_verification_message = format_placeholders(
+            verification_message,
+            {
+                "guild_name": guild.name,
+                "guild_id": guild.id,
+                "guild_total_members": len(guild.members),
+                "guild_humans": len([member for member in guild.members if not member.bot]),
+                "member_name": member.name,
+                "member_id": member.id,
+                "member_mention": member.mention,
+                "member_tag": str(member),
+                "member_discrim": member.discriminator,
+                "verified_role_name": role.name,
+                "verified_role_id": role.id,
+                "verified_role_mention": role.mention
+            }
+        )
+
         embed = self.embed_gen.get_normal_embed(
             title="Verification Successful",
-            description=f"Good Job! You have been verified!\n\n**I have given you the role `{role}`**"
+            description=formatted_verification_message
 
         )
 
@@ -120,7 +170,9 @@ class Verify(commands.Cog):
 
         await self.display_captcha(
             captcha_file,
-            (await member_or_user.create_dm())
+            (await member_or_user.create_dm()),
+            guild,
+            (guild.get_member(member_or_user.id)) # to make sure, its a member object
         )
 
         try:
@@ -136,7 +188,7 @@ class Verify(commands.Cog):
         
         await self.on_success(member_or_user, member_or_user.dm_channel, guild)
 
-    async def start_channel_verification(self, member: discord.Member, verification_channel: discord.TextChannel):
+    async def start_channel_verification(self, member: discord.Member, verification_channel: discord.TextChannel, guild: discord.Guild):
         """Starts verification using channel method"""
 
         captcha = await Captcha.new(self.bot.CAPTCHA_API_URL, self.bot.aio_session)
@@ -147,6 +199,8 @@ class Verify(commands.Cog):
         await self.display_captcha(
             captcha_file,
             verification_channel,
+            guild,
+            member,
             mention=member.mention
         )
 
@@ -186,7 +240,7 @@ class Verify(commands.Cog):
 
             verification_channel = guild.get_channel(verification_channel_id)
      
-            return await self.start_channel_verification(member_or_user, verification_channel)
+            return await self.start_channel_verification(member_or_user, verification_channel, guild)
 
         await self.start_reaction_verification(member_or_user, guild)
 

@@ -22,10 +22,14 @@ class ConfigType(str, Enum):
     
     VERIFICATION_CHANNEL: Stores the verification channel ID
     VERIFIED_ROLE: Stores the verified role ID
+    VERIFICATION_MESSAGE_START: Stores the message sent on verification start
+    VERIFICATION_MESSAGE_SUCCESS: Stores the message sent on verification success
     """
     
     VERIFICATION_CHANNEL = "VERIFICATION_CHANNEL"
     VERIFIED_ROLE = "VERIFIED_ROLE"
+    VERIFICATION_MESSAGE_START = "VERIFICATION_MESSAGE_START"
+    VERIFICATION_MESSAGE_SUCCESS = "VERIFICATION_MESSAGE_SUCCESS"
 
 class Guild(Model):
     """Database Model representing a discord `Guild`
@@ -75,7 +79,21 @@ class Guild(Model):
 
 
 class Config(Model):
-    """Database Model for storing guild specific config values"""
+    """Database Model for storing guild specific config values
+    
+    Fields
+    ------
+    guild: `Guild`
+        guild object related
+    type_: `ConfigType`
+        the config type
+    value_int: int
+        stores integer values
+    value_str: str
+        stores string/text values
+    value_json: json
+        stores json values
+    """
     guild: Guild = fields.ForeignKeyField("models.Guild", related_name="configs")
     type_ = fields.CharEnumField(ConfigType, source_field="type")
     value_int = fields.BigIntField(null=True)
@@ -120,7 +138,7 @@ class Config(Model):
             type_=type_
         )
         if not config[1]:
-            config[0].value_int=value
+            config[0].value_str=value
             await config[0].save(update_fields=['value_str'])
         
         return config

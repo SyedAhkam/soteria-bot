@@ -62,5 +62,31 @@ class Setup(commands.Cog):
         )
         await ctx.send(f"Set `{role}` as verified role.")
 
+    @set.command()
+    async def verification_start_message(self, ctx: commands.Context, *, message: str):
+        """Sets the verification start message"""
+
+        guild_obj = await Guild.get(id=ctx.guild.id)
+
+        await Config.set_value_str(
+            guild_obj,
+            ConfigType.VERIFICATION_MESSAGE_START,
+            message
+        )
+        await ctx.send(f"Set the verification start message as: ```\n{message}\n```")
+
+    @set.command()
+    async def verification_success_message(self, ctx: commands.Context, *, message: str):
+        """Sets the verification success message"""
+
+        guild_obj = await Guild.get(id=ctx.guild.id)
+
+        await Config.set_value_str(
+            guild_obj,
+            ConfigType.VERIFICATION_MESSAGE_SUCCESS,
+            message
+        )
+        await ctx.send(f"Set the verification success message as: ```\n{message}\n```")
+
 def setup(bot: commands.Bot):
     bot.add_cog(Setup(bot))
