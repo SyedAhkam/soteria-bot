@@ -22,16 +22,17 @@ intents.members = True
 # Load environment variables from `.env` file
 load_dotenv(dotenv_path="../.env")
 
+
 class Soteria(commands.Bot):
     """Subclass of `commands.Bot` for more control"""
-    
+
     def __init__(self, *args, **kwargs):
         super().__init__(
-            *args, 
+            *args,
             command_prefix=self.get_prefix,
             case_insensitive=True,
             intents=intents,
-            **kwargs
+            **kwargs,
         )
 
         # Logs for obvious reasons
@@ -61,6 +62,15 @@ class Soteria(commands.Bot):
 
         # Start the startup task
         self.startup_task = self.loop.create_task(self.startup())
+
+    @staticmethod
+    def is_env_dev():
+        """Returns a boolean signifying if bot is running in dev mode"""
+        env_value = os.getenv("SOTERIA_ENV_DEV", default="0")
+        if env_value == "1":
+            return True
+
+        return False
 
     def _load_cogs(self, directory: str):
         """Loads cogs from specified directory
@@ -94,11 +104,8 @@ class Soteria(commands.Bot):
     async def _init_db(self, db_uri: str):
         """Initializes database ORM"""
 
-        await Tortoise.init(
-            db_url=db_uri,
-            modules={"models": ["models"]}
-        )
-        
+        await Tortoise.init(db_url=db_uri, modules={"models": ["models"]})
+
         self.logger.info("Generating schemas...")
         await Tortoise.generate_schemas(safe=True)
 
@@ -108,14 +115,10 @@ class Soteria(commands.Bot):
         """Sets the bot presence on startup"""
 
         activity = discord.Activity(
-            type=discord.ActivityType.listening,
-            name=presence_text
+            type=discord.ActivityType.listening, name=presence_text
         )
 
-        await self.change_presence(
-                status=discord.Status.online,
-                activity=activity
-        )
+        await self.change_presence(status=discord.Status.online, activity=activity)
         self.logger.info(f"Set bot presence to '{presence_text}'")
 
     async def get_prefix(self, message: discord.Message):
@@ -126,7 +129,7 @@ class Soteria(commands.Bot):
         message: discord.Message
             The message to get prefix for
         """
-        
+
         # If it's not a guild, just return default prefix
         if not message.guild:
             return commands.when_mentioned_or(self.DEFAULT_PREFIX)(self, message)
@@ -157,14 +160,14 @@ class Soteria(commands.Bot):
 
     async def startup(self):
         """A custom `asyncio.Task` which runs on bot's initial bootup (statup)
-        
+
         This is responsible for the following:
             - Load cogs
             - Initializes database connections
             - Set a discord presence
         """
 
-        await self.wait_until_ready() # waits until the bot's internal cache is ready
+        await self.wait_until_ready()  # waits until the bot's internal cache is ready
 
         self.logger.info(f"Connected to discord as {self.user}")
 
@@ -183,7 +186,7 @@ class Soteria(commands.Bot):
 
     async def close(self):
         """Closes the underlying connections for a clean exit"""
-        
+
         self.logger.warning("Closing connections...")
 
         await Tortoise.close_connections()
@@ -197,6 +200,7 @@ class Soteria(commands.Bot):
         self.logger.critical("Bye!")
 
         await super().close()
+
 
 if __name__ == "__main__":
     bot = Soteria()

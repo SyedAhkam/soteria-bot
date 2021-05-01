@@ -4,6 +4,7 @@ import time
 
 from discord.ext import commands
 
+
 class Info(commands.Cog):
     """Basic informational commands"""
 
@@ -41,11 +42,14 @@ class Info(commands.Cog):
 
     @commands.command()
     async def test(self, ctx):
-        async with self.bot.aio_session.get(self.bot.CAPTCHA_API_URL + 'captcha') as r:
+        async with self.bot.aio_session.get(self.bot.CAPTCHA_API_URL + "captcha") as r:
             captcha_base64 = (await r.json())["captcha"][22:]
             captcha_bytes = base64.b64decode(captcha_base64)
 
-            await ctx.send(file=discord.File(BytesIO(captcha_bytes), filename="captcha.png"))
+            await ctx.send(
+                file=discord.File(BytesIO(captcha_bytes), filename="captcha.png")
+            )
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Info(bot))

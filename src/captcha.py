@@ -3,13 +3,13 @@ import base64
 
 from io import BytesIO
 
-class Captcha():
+
+class Captcha:
     """Encapsulates all the captcha logic"""
-    
+
     # Constants
     captcha_gen_endpoint = "captcha"
     captcha_verify_endpoint = "verify"
-
 
     def __init__(self):
         # Bind attributes
@@ -24,7 +24,9 @@ class Captcha():
     async def new(cls, captcha_api_base_url: str, aio_session):
         """Fetches and creates a new instance"""
 
-        async with aio_session.get(captcha_api_base_url + cls.captcha_gen_endpoint) as resp:
+        async with aio_session.get(
+            captcha_api_base_url + cls.captcha_gen_endpoint
+        ) as resp:
             new_captcha = cls()
 
             new_captcha.captcha_api_base_url = captcha_api_base_url
@@ -42,7 +44,7 @@ class Captcha():
 
         async with self.aio_session.get(
             self.captcha_api_base_url + self.captcha_verify_endpoint,
-            json={"uuid": self.captcha_uuid, "captcha": user_response}
+            json={"uuid": self.captcha_uuid, "captcha": user_response},
         ) as resp:
             if not resp.status == 200:
                 return False
