@@ -24,14 +24,22 @@ class ConfigType(str, Enum):
 
     VERIFICATION_CHANNEL: Stores the verification channel ID
     VERIFIED_ROLE: Stores the verified role ID
+
     VERIFICATION_MESSAGE_START: Stores the message sent on verification start
     VERIFICATION_MESSAGE_SUCCESS: Stores the message sent on verification success
+
+    REACTION_CHANNEL: Stores the channel ID for reaction method
+    REACTION_MESSAGE: Stores the message ID for reaction method
+    REACTION_EMOJI: Stores the emoji for reaction method
     """
 
     VERIFICATION_CHANNEL = "VERIFICATION_CHANNEL"
     VERIFIED_ROLE = "VERIFIED_ROLE"
     VERIFICATION_MESSAGE_START = "VERIFICATION_MESSAGE_START"
     VERIFICATION_MESSAGE_SUCCESS = "VERIFICATION_MESSAGE_SUCCESS"
+    REACTION_CHANNEL = "REACTION_CHANNEL"
+    REACTION_MESSAGE = "REACTION_MESSAGE"
+    REACTION_EMOJI = "REACTION_EMOJI"
 
 
 class Guild(Model):
@@ -101,6 +109,8 @@ class Config(Model):
         stores string/text values
     value_json: json
         stores json values
+    value_bool: bool
+        stores boolean values
     """
 
     guild: Guild = fields.ForeignKeyField("models.Guild", related_name="configs")
@@ -108,6 +118,7 @@ class Config(Model):
     value_int = fields.BigIntField(null=True)
     value_str = fields.CharField(max_length=2000, null=True)
     value_json = fields.JSONField(null=True)
+    value_bool = fields.BooleanField(null=True)
 
     def __str__(self):
         return self.value_str
@@ -135,6 +146,13 @@ class Config(Model):
         if not (config := await Config.get_or_none(guild=guild, type_=type_)):
             return
         return config.value_json
+
+    @staticmethod
+    async def get_value_bool(guild: Guild, type_: ConfigType):
+        """Gets the value bool for a specific guild with a type"""
+        if not (config := await Config.get_or_none(guild=guild, type_=type_)):
+            return
+        return config.value_bool
 
     @staticmethod
     async def set_value_str(guild: Guild, type_: ConfigType, value: str):
@@ -171,5 +189,17 @@ class Config(Model):
         if not config[1]:
             config[0].value_json = value
             await config[0].save(update_fields=["value_json"])
+
+        return config
+
+    @staticmethod
+    async def set_value_bool(guild: Guild, type_: ConfigType, value: bool):
+        """Sets or creates a config object with the specified value bool for a guild"""
+        config = await Config.get_or_create(
+            {"value_bool": value}, guild=guild, type_=type_
+        )
+        if not config[1]:
+            config[0].value_bool = value
+            await config[0].save(update_fields=["value_bool"])
 
         return config

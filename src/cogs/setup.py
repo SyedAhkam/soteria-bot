@@ -3,7 +3,7 @@ import discord
 from discord.ext import commands
 
 from models import Guild, Config, ConfigType
-from utils.converters import VerificationMethodConverter
+from utils.converters import VerificationMethodConverter, UnicodeEmojiConverter
 
 # FIXME: permissions
 
@@ -84,6 +84,60 @@ class Setup(commands.Cog):
             guild_obj, ConfigType.VERIFICATION_MESSAGE_SUCCESS, message
         )
         await ctx.send(f"Set the verification success message as: ```\n{message}\n```")
+
+    @set.command()
+    async def reaction_channel(
+        self, ctx: commands.Context, channel: discord.TextChannel
+    ):
+        """Sets the reaction channel"""
+
+        guild_obj = await Guild.get(id=ctx.guild.id)
+
+        await Config.set_value_int(guild_obj, ConfigType.REACTION_CHANNEL, channel.id)
+        await ctx.send(f"Set `{channel}` as reaction channel.")
+
+    @set.command()
+    async def reaction_message(
+        self, ctx: commands.Context, message: discord.Message
+    ):  # FIXME: converting to `discord.Message` could have some caching issues
+        """Sets the reaction message"""
+
+        guild_obj = await Guild.get(id=ctx.guild.id)
+
+        await Config.set_value_int(guild_obj, ConfigType.REACTION_MESSAGE, message.id)
+        await ctx.send(f"Set the reaction message to: ```\n{message.content}\n```")
+
+        # try to react
+        is_emoji_unicode = await Config.get_value_bool(
+            guild_obj, ConfigType.REACTION_EMOJI
+        )
+
+        if is_emoji_unicode:
+            emoji = await Config.get_value_str(guild_obj, ConfigType.REACTION_EMOJI)
+        else:
+            emoji = await ctx.guild.fetch_emoji(
+                await Config.get_value_int(guild_obj, ConfigType.REACTION_EMOJI)
+            )
+
+        await message.add_reaction(emoji)
+
+    @set.command()
+    async def reaction_emoji(self, ctx: commands.Context, emoji: UnicodeEmojiConverter):
+        """Sets the reaction emoji"""
+
+        emoji, is_unicode = emoji
+
+        guild_obj = await Guild.get(id=ctx.guild.id)
+
+        # stores is_unicode value
+        await Config.set_value_bool(guild_obj, ConfigType.REACTION_EMOJI, is_unicode)
+
+        if is_unicode:
+            await Config.set_value_str(guild_obj, ConfigType.REACTION_EMOJI, emoji)
+        else:
+            await Config.set_value_int(guild_obj, ConfigType.REACTION_EMOJI, emoji.id)
+
+        await ctx.send(f"Set the reaction emoji as: ```\n{emoji}\n```")
 
 
 def setup(bot: commands.Bot):

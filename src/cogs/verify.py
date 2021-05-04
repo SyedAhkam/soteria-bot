@@ -9,9 +9,6 @@ from models import Guild, Config, ConfigType, VerificationMethod
 from captcha import Captcha
 from utils.extras import format_placeholders
 
-# TODO: allow users to customize verification message
-# TODO: allow users to use placeholders in message like {guild_name}
-
 
 class Verify(commands.Cog):
     """Main verification"""
@@ -152,7 +149,7 @@ class Verify(commands.Cog):
 
         # Dangerous recursion here
         if reply_msg.content.upper() == "Y":
-            await self.handle_verification_methods(member_or_user, guild)
+            await self.handle_text_verification_methods(member_or_user, guild)
 
         elif reply_msg.content.upper() == "N":
             await channel.send(
@@ -292,14 +289,7 @@ class Verify(commands.Cog):
             mention=member.mention,
         )
 
-    async def start_reaction_verification(
-        self, member: discord.Member, guild: discord.Guild
-    ):
-        """Starts verification using reaction method"""
-
-        pass
-
-    async def handle_verification_methods(
+    async def handle_text_verification_methods(
         self,
         member_or_user: typing.Union[discord.Member, discord.User],
         guild: discord.Guild,
@@ -332,13 +322,91 @@ class Verify(commands.Cog):
                 member_or_user, verification_channel, guild
             )
 
-        await self.start_reaction_verification(member_or_user, guild)
+        # if somehow, method is set to reaction and verify command was used
+        if invocation_channel:
+            await invocation_channel.send(
+                "Verification method is set to reaction.\nPlease react to verification message in order to continue verification process."
+            )
+
+    async def start_reaction_verification(
+        self,
+        member: discord.Member,
+        guild: discord.Guild,
+        channel_id: int,
+        message_id: int,
+        reaction_emoji: discord.PartialEmoji,
+    ):
+        """Starts verification using reaction method"""
+
+        guild_obj = await Guild.get_or_none(id=guild.id)
+        if not guild_obj:
+            return
+
+        if (
+            not guild_obj.verification_method == VerificationMethod.REACTION
+        ):  # if verification method is not REACTION; return
+            return
+
+        reaction_channel_id = await Config.get_value_int(
+            guild_obj, ConfigType.REACTION_CHANNEL
+        )
+        if not reaction_channel_id:
+            return
+
+        if (
+            not channel_id == reaction_channel_id
+        ):  # check if channel is the same as reaction channel in db
+            return
+
+        reaction_message = await Config.get_value_int(
+            guild_obj, ConfigType.REACTION_MESSAGE
+        )
+        if (
+            not message_id == reaction_message
+        ):  # check if message is the same as reaction message in db
+            return
+
+        is_unicode = await Config.get_value_bool(guild_obj, ConfigType.REACTION_EMOJI)
+        if is_unicode:
+            emoji = await Config.get_value_str(guild_obj, ConfigType.REACTION_EMOJI)
+        else:
+            emoji = self.bot.get_emoji(
+                await Config.get_value_int(guild_obj, ConfigType.REACTION_EMOJI)
+            )
+
+        if str(reaction_emoji) == str(
+            emoji
+        ):  # check if emoji is the same as reaction emoji in db
+            await self.on_success(member, (await member.create_dm()), guild)
 
     @commands.Cog.listener(name="on_member_join")
     async def handle_joins(self, member: discord.Member):
         """Starts automatic verification for new members"""
 
-        await self.handle_verification_methods(member, member.guild)
+        await self.handle_text_verification_methods(member, member.guild)
+
+    @commands.Cog.listener(name="on_raw_reaction_add")
+    async def handle_reactions(self, payload: discord.RawReactionActionEvent):
+        """Handles new reactions detected"""
+        if not payload:
+            return
+
+        guild = self.bot.get_guild(payload.guild_id)
+        if not guild:
+            return
+
+        member = guild.get_member(payload.user_id)
+        if not member:
+            return
+
+        if member == guild.me:  # ignore if reaction by bot itself
+            return
+
+        # TODO: CHECK METHOD
+
+        await self.start_reaction_verification(
+            member, guild, payload.channel_id, payload.message_id, payload.emoji
+        )
 
     @commands.command()
     @commands.max_concurrency(
@@ -370,7 +438,7 @@ class Verify(commands.Cog):
             await ctx.send("You are already verified!")
             return
 
-        await self.handle_verification_methods(
+        await self.handle_text_verification_methods(
             ctx.author, guild, invocation_channel=ctx.channel
         )
 

@@ -10,7 +10,9 @@ class ErrorHandler(commands.Cog):
         self.ignored = commands.CommandNotFound
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx: commands.Context, error: commands.CommandError):
+    async def on_command_error(
+        self, ctx: commands.Context, error: commands.CommandError
+    ):
         """Using on_command_error as an error handler."""
         error = getattr(error, "original", error)
 
