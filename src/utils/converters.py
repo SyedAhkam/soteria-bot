@@ -4,7 +4,6 @@ from discord.ext import commands
 
 from models import VerificationMethod
 
-
 # Prevents the file to be read multiple times
 DISCORD_EMOJIS = None
 with open("../assets/discord_emojis.json") as f:

@@ -1,16 +1,15 @@
 import os
 import sys
 
-import discord
 import aiohttp
-
+import discord
 from discord.ext import commands
 from dotenv import load_dotenv
 from tortoise import Tortoise
 
-from utils.logging import get_bot_logger, setup_discord_logging
 from models import Guild
 from utils.embeds import EmbedGen
+from utils.logging import get_bot_logger, setup_discord_logging
 
 # Logs from discord library itself
 setup_discord_logging()

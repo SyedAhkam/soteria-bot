@@ -1,7 +1,6 @@
-import discord
-
 import time
 
+import discord
 from discord.ext import commands
 
 

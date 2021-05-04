@@ -1,7 +1,7 @@
-import discord
 import base64
-
 from io import BytesIO
+
+import discord
 
 
 class Captcha:

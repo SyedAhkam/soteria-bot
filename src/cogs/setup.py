@@ -1,9 +1,8 @@
 import discord
-
 from discord.ext import commands
 
-from models import Guild, Config, ConfigType
-from utils.converters import VerificationMethodConverter, UnicodeEmojiConverter
+from models import Config, ConfigType, Guild
+from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
 
 # FIXME: permissions
 

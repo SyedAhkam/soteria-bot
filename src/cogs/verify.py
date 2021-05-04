@@ -1,12 +1,11 @@
-import discord
-
-import typing
 import asyncio
+import typing
 
+import discord
 from discord.ext import commands
 
-from models import Guild, Config, ConfigType, VerificationMethod
 from captcha import Captcha
+from models import Config, ConfigType, Guild, VerificationMethod
 from utils.extras import format_placeholders
 
 
@@ -401,8 +400,6 @@ class Verify(commands.Cog):
 
         if member == guild.me:  # ignore if reaction by bot itself
             return
-
-        # TODO: CHECK METHOD
 
         await self.start_reaction_verification(
             member, guild, payload.channel_id, payload.message_id, payload.emoji
