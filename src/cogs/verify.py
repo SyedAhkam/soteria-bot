@@ -410,7 +410,24 @@ class Verify(commands.Cog):
         1, per=commands.BucketType.user
     )  # to prevent spam by same user
     async def verify(self, ctx: commands.Context, guild: discord.Guild = None):
-        """Starts the verification process manually"""
+        """Starts the verification process manually
+        
+        This could be used when failed the first automatic attempt by the bot.
+
+        **Arguments**
+        --------------
+        guild: discord guild (optional)
+
+        **Accepts**
+        ------------
+        - guild id
+        - guild name (maybe)
+
+        **Notes**
+        ----------
+        - `guild` is a required argument when command is invoked inside DM's
+        - covers only text based verification
+        """
 
         if not ctx.guild and not guild:
             await ctx.send(

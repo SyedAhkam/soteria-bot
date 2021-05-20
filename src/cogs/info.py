@@ -10,7 +10,7 @@ class Info(commands.Cog):
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 
-    @commands.command(name="ping")
+    @commands.command()
     async def ping(self, ctx: commands.Context):
         """Check the bot's latency"""
         pings = []
@@ -38,17 +38,6 @@ class Info(commands.Cog):
         await ctx.send(
             f"__**Ping Times:**__\nTyping: `{typingms}ms`  |  Latency: `{latencyms}ms`\nDiscord: `{discordms}`  |  Average: `{average}ms`"
         )
-
-    @commands.command()
-    async def test(self, ctx):
-        async with self.bot.aio_session.get(self.bot.CAPTCHA_API_URL + "captcha") as r:
-            captcha_base64 = (await r.json())["captcha"][22:]
-            captcha_bytes = base64.b64decode(captcha_base64)
-
-            await ctx.send(
-                file=discord.File(BytesIO(captcha_bytes), filename="captcha.png")
-            )
-
-
+    
 def setup(bot: commands.Bot):
     bot.add_cog(Info(bot))

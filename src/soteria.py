@@ -19,7 +19,7 @@ intents = discord.Intents.default()
 intents.members = True
 
 # Load environment variables from `.env` file
-load_dotenv(dotenv_path="../.env")
+load_dotenv()
 
 
 class Soteria(commands.Bot):
