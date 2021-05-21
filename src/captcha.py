@@ -35,8 +35,11 @@ class Captcha:
             new_captcha.aio_session = aio_session
 
             #  new_captcha.captcha_json = await resp.json()
+
             # Workaround for content-type errors
-            new_captcha.captcha_json = json.loads(await resp.read())
+            resp_text = await resp.text()
+            print(resp_text)
+            new_captcha.captcha_json = json.loads(resp_text)
 
             new_captcha.captcha_uuid = new_captcha.captcha_json["uuid"]
             new_captcha.captcha_base64 = new_captcha.captcha_json["captcha"][22:]
