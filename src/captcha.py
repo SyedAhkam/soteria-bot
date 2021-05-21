@@ -1,4 +1,6 @@
 import base64
+import json
+
 from io import BytesIO
 
 import discord
@@ -32,7 +34,9 @@ class Captcha:
             new_captcha.captcha_api_base_url = captcha_api_base_url
             new_captcha.aio_session = aio_session
 
-            new_captcha.captcha_json = await resp.json()
+            #  new_captcha.captcha_json = await resp.json()
+            # Workaround for content-type errors
+            new_captcha.captcha_json = json.loads(await resp.read())
 
             new_captcha.captcha_uuid = new_captcha.captcha_json["uuid"]
             new_captcha.captcha_base64 = new_captcha.captcha_json["captcha"][22:]
