@@ -158,7 +158,7 @@ class Soteria(commands.Bot):
         await (await Guild.get(id=guild.id)).delete()
 
     async def startup(self):
-        """A custom `asyncio.Task` which runs on bot's initial bootup (statup)
+        """A custom `asyncio.Task` which runs on bot's initial bootup (startup)
 
         This is responsible for the following:
             - Load cogs
