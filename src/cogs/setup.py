@@ -3,7 +3,6 @@ from discord.ext import commands
 
 from models import Config, ConfigType, Guild
 from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
-from utils.exceptions import AdminPermsError
 
 class Setup(commands.Cog):
     """Configure the bot here"""
