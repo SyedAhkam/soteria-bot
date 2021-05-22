@@ -231,7 +231,7 @@ class Verify(commands.Cog):
                 member_or_user.dm_channel, member_or_user, timeout=60
             )
         except asyncio.TimeoutError:
-            await self.on_timeout(member_or_user, member_or_user.dm_channel, guild)
+            await self.on_timeout(member_or_user, guild)
             return
 
         result = await self.verify_text_input(captcha, user_input)
@@ -264,7 +264,6 @@ class Verify(commands.Cog):
             )
         except asyncio.TimeoutError:
             await self.on_timeout(
-                member,
                 verification_channel,
                 verification_channel.guild,
                 mention=member.mention,
