@@ -23,8 +23,6 @@ class BotHelpMenu(ListPageSource):
         This help message is categorized for easier discoverability of commands. It's intended to give you a bird's-eye view of all the available features.
 
         *Some commands may be hidden because of permission requirements*
-
-        ~~Coded by a professional dev~~
         """
         offset = (menu.current_page * self.per_page) + 1
         len_data = len(self.entries)
@@ -45,7 +43,7 @@ class BotHelpMenu(ListPageSource):
                 continue
 
             embed.add_field(
-                name='😒 ' + cog.qualified_name.capitalize(),
+                name=cog.qualified_name.capitalize(),
                 value=f"""*{cog.description or 'No Description yet'}*
                 `{', '.join(command.name for command in commands if command)}`
                 """,
