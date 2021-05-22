@@ -3,9 +3,7 @@ from discord.ext import commands
 
 from models import Config, ConfigType, Guild
 from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
-
-# FIXME: permissions
-
+from utils.exceptions import AdminPermsError
 
 class Setup(commands.Cog):
     """Configure the bot here"""
@@ -14,6 +12,7 @@ class Setup(commands.Cog):
         self.bot = bot
 
     @commands.guild_only()
+    @commands.has_permissions(administrator=True)
     @commands.group()
     async def set(self, ctx: commands.Context):
         """Group of commands to customize the bot's behaviour"""
