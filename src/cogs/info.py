@@ -38,6 +38,29 @@ class Info(commands.Cog):
         await ctx.send(
             f"__**Ping Times:**__\nTyping: `{typingms}ms`  |  Latency: `{latencyms}ms`\nDiscord: `{discordms}`  |  Average: `{average}ms`"
         )
+
+    @commands.command()
+    async def invite(self, ctx: commands.Context):
+        """Returns the invite link for bot
+
+        Permissions snowflake is `268725312`
+        
+        Permissions
+        -----------
+        - Manage Roles
+        - View Channels
+        - Send Messages
+        - Manage Messages
+        - Embed Links
+        - External Emojis
+        - Reactions
+        """
+        permissions_integer = 268725312
+        client_id = self.bot.user.id
+
+        await ctx.send(
+            f"https://discord.com/api/oauth2/authorize?client_id={client_id}&permissions={permissions_integer}&scope=bot"
+        )
     
 def setup(bot: commands.Bot):
     bot.add_cog(Info(bot))
