@@ -71,7 +71,7 @@ class Verify(commands.Cog):
             guild_obj, ConfigType.VERIFICATION_MESSAGE_START
         )
         if not verification_message:
-            verification_message = "The server you just joined requires manual verification.\n\n**Just reply me with the characters displayed below.**"
+            verification_message = "The server you just joined requires manual verification.\n\n**Just reply me with the characters displayed below. (case-sensitive)**"
 
         formatted_verification_message = format_placeholders(
             verification_message,
