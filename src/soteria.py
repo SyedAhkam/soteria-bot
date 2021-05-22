@@ -157,6 +157,34 @@ class Soteria(commands.Bot):
         # Deletes the `Guild` object
         await (await Guild.get(id=guild.id)).delete()
 
+    async def on_message(self, message: discord.Message):
+        """Event emmited on every message create
+
+        This is responsible for the following:
+            - Reply back with prefix, when mentioned
+        """
+
+        if message.author == self.user:  # ignore, if the message by the bot itself
+            return
+
+        if len(message.mentions) > 1:  # ignore, if more than 1 mentions
+            await self.process_commands(message)
+            return
+
+        if len(message.content.split()) > 1:  # ignore, if more than 1 words
+            await self.process_commands(message)
+            return
+
+        if self.user.id in message.raw_mentions:  # if bot user was mentioned
+            prefixes = (await self.get_prefix(message))[1:]
+
+            await message.channel.send(f"My prefixes are: {', '.join(prefixes)}")
+
+        await self.process_commands(
+            message
+        )  # make sure other commands are processed after this event
+
+
     async def startup(self):
         """A custom `asyncio.Task` which runs on bot's initial bootup (startup)
 
