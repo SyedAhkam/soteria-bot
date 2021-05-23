@@ -417,7 +417,6 @@ class Verify(commands.Cog):
     @commands.max_concurrency(
         1, per=commands.BucketType.user
     )  # to prevent spam by same user
-    @commands.bot_has_permissions(manage_roles=True)
     async def verify(self, ctx: commands.Context, guild: discord.Guild = None):
         """Starts the verification process manually
         
