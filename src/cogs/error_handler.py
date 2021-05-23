@@ -184,7 +184,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.UserInputError):
             embed = self.embed_gen.get_error_embed(
                 title="Input Error",
-                description="Sorry, Sorry, I failed to parse your input.\nMaybe the command expects a number and you provided a text instead?"
+                description="Sorry, I failed to parse your input.\nMaybe the command expects a number and you provided a text instead?"
             )
             await ctx.send(embed=embed)
             return
