@@ -465,6 +465,12 @@ class Verify(commands.Cog):
             ctx.author, guild, invocation_channel=ctx.channel
         )
 
+    @verify.error
+    async def verify_error(self, ctx: commands.Context, error):
+        """Local command error handler for verify"""
+
+        if isinstance(error, commands.GuildNotFound):
+            await ctx.send("Invalid guild provided.\nThis should be one of these: Guild ID, Guild Name (maybe)")
 
 def setup(bot: commands.Bot):
     bot.add_cog(Verify(bot))
