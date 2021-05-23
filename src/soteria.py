@@ -31,6 +31,7 @@ class Soteria(commands.Bot):
             command_prefix=self.get_prefix,
             case_insensitive=True,
             intents=intents,
+            owner_id=342545053169877006,
             **kwargs,
         )
 
