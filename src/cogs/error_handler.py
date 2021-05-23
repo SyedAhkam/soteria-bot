@@ -270,7 +270,7 @@ class ErrorHandler(commands.Cog):
         )
         await ctx.send(embed=embed)
 
-        owner = await self.bot.get_user(self.bot.owner_id)
+        owner = self.bot.get_user(self.bot.owner_id)
         ctx_dict = f"```py\n{ctx.__dict__}\n```"
         await owner.send(
             f"An error occured in {ctx.guild or 'DM'} while invoking command: {ctx.command.name}\n{error.__class__.__name__}: {str(error)}\n{ctx_dict}"
