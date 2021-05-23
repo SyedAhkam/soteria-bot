@@ -16,6 +16,11 @@ class Verify(commands.Cog):
         self.bot = bot
         self.embed_gen = bot.embed_gen
 
+    async def is_verified_role_set(self, guild: discord.Guild):
+        guild_obj = await Guild.get(id=guild.id)
+
+        return await Config.exists(guild=guild_obj, type_=ConfigType.VERIFIED_ROLE)
+
     async def get_text_input(
         self,
         channel: discord.TextChannel,
@@ -297,6 +302,10 @@ class Verify(commands.Cog):
 
         verification_method = (await Guild.get(id=guild.id)).get_verification_method()
 
+        # If verified role is not set; ignore
+        if not (await self.is_verified_role_set(guild)):
+            return
+
         if verification_method == VerificationMethod.DM:
             if invocation_channel and isinstance(
                 invocation_channel, discord.TextChannel
@@ -442,7 +451,7 @@ class Verify(commands.Cog):
         )
 
         if not verified_role_id:  # ignore if not set
-            return
+            return await ctx.send("Verified role is not set. Please contact the server admins.")
 
         verified_role = guild.get_role(verified_role_id)
         member = guild.get_member(ctx.author.id)  # ensure it's a member object
