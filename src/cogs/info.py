@@ -64,11 +64,11 @@ class Info(commands.Cog):
 
     @commands.command()
     async def info(self, ctx: commands.Context):
-        pass
+        await ctx.send("Not Implemented yet")
 
     @commands.command()
     async def status(self, ctx: commands.Context):
-        pass
+        await ctx.send("Not Implemented yet")
     
 def setup(bot: commands.Bot):
     bot.add_cog(Info(bot))
