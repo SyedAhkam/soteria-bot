@@ -4,6 +4,8 @@ from discord.ext import commands
 from models import Config, ConfigType, Guild
 from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
 
+#TODO: setup command
+
 class Setup(commands.Cog):
     """Configure the bot here"""
 

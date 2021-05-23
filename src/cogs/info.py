@@ -61,6 +61,14 @@ class Info(commands.Cog):
         await ctx.send(
             f"https://discord.com/api/oauth2/authorize?client_id={client_id}&permissions={permissions_integer}&scope=bot"
         )
+
+    @commands.command()
+    async def info(self, ctx: commands.Context):
+        pass
+
+    @commands.command()
+    async def status(self, ctx: commands.Context):
+        pass
     
 def setup(bot: commands.Bot):
     bot.add_cog(Info(bot))
