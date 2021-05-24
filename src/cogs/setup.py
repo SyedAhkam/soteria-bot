@@ -5,6 +5,8 @@ from models import Config, ConfigType, Guild
 from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
 
 # TODO: setup command
+# TODO: reset commmand or allow users to pass in None
+# TODO: Test commands
 
 
 class Setup(commands.Cog):
@@ -235,14 +237,19 @@ class Setup(commands.Cog):
             guild_obj, ConfigType.REACTION_EMOJI
         )
 
-        if is_emoji_unicode:
-            emoji = await Config.get_value_str(guild_obj, ConfigType.REACTION_EMOJI)
-        else:
-            emoji = await ctx.guild.fetch_emoji(
-                await Config.get_value_int(guild_obj, ConfigType.REACTION_EMOJI)
-            )
+        try:
+            if is_emoji_unicode:
+                emoji = await Config.get_value_str(guild_obj, ConfigType.REACTION_EMOJI)
+            else:
+                emoji = await ctx.guild.fetch_emoji(
+                    await Config.get_value_int(guild_obj, ConfigType.REACTION_EMOJI)
+                )
 
-        await message.add_reaction(emoji)
+            await message.add_reaction(emoji)
+        except discord.HTTPException:
+            await ctx.send(
+                "Failed to add reaction to message. Did you set reaction emoji and it's valid?"
+            )
 
     @set.command(aliases=["reaction-emoji", "re"])
     async def reaction_emoji(self, ctx: commands.Context, emoji: UnicodeEmojiConverter):
