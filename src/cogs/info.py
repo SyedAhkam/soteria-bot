@@ -1,4 +1,5 @@
 import time
+import sys, platform
 
 import discord
 from discord.ext import commands
@@ -66,7 +67,35 @@ class Info(commands.Cog):
     async def info(self, ctx: commands.Context):
         """Shows Info about bot"""
 
-        await ctx.send("Not Implemented yet")
+        embed = self.bot.embed_gen.get_normal_embed(
+            title="Bot Info",
+            description=f"""Soteria is a next-gen verification bot utilising the power of captchas
+            
+            **Bot**
+            ------
+            - Guilds: {len(self.bot.guilds)}
+            - Users: {len(self.bot.users)}
+
+            **Host Environment**
+            ----------------------
+            - OS/Kernel: {sys.platform}
+            - Platform: {platform.platform()}
+            - Arch: {platform.architecture()[0]}
+
+            **Developed By**
+            ----------------
+            - SyedAhkam#5085 (Bot Developer)
+            - Распутин#0962 (General Idea and captcha API)
+
+            **Interesting Fact**
+            ---------------------
+            This bot started as a challenge between two friends-- Syed and Распутин to be exact.
+            The challenge was: "One of us would code in Python and other in JS, And later we would judge each other's end-result" (no hate on languages)
+            
+            Unfortunately, Распутин's busy life did not allow him to pursue the afforementioned challenge-- Hence, The bot in production currently is the one coded by Syed.
+            """
+        )
+        await ctx.send(embed=embed)
 
     @commands.command()
     async def status(self, ctx: commands.Context):
