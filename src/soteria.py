@@ -1,6 +1,8 @@
 import os
 import sys
 
+from pathlib import Path
+
 import aiohttp
 import discord
 from discord.ext import commands
@@ -72,7 +74,7 @@ class Soteria(commands.Bot):
 
         return False
 
-    def _load_cogs(self, directory: str):
+    def _load_cogs(self, directory: os.PathLike):
         """Loads cogs from specified directory
 
         Parameters
@@ -80,24 +82,27 @@ class Soteria(commands.Bot):
         directory: str
             The directory path to load cogs from
         """
+        
+        for file in os.listdir(directory):
+            filename, ext = os.path.splitext(file)
 
-        for filename in os.listdir(directory):
-            filename_with_no_ext = filename[:-3]
-
-            if not filename.endswith(
-                ".py"
-            ):  # if a file does not have a `.py` extension, ignore
+            if not ext == ".py":
+                print('ext py')
+                continue
+                
+            if filename in self.IGNORED_COGS:
+                print("ignored")
                 continue
 
-            if (
-                filename_with_no_ext in self.IGNORED_COGS
-            ):  # if filename is in `IGNORED_COGS` list, ignore
-                continue
+            try:
+                self.load_extension(
+                    f"{directory.name}.{filename}"
+                )  # finally, load the cog
+            except commands.ExtensionError as e:
+                self.logger.critical(f"Failed to load extension: {filename}")
+                raise e
 
-            self.load_extension(
-                f"{directory}.{filename_with_no_ext}"
-            )  # finally, load the cog
-            self.logger.info(f"Loaded extension cog: {filename_with_no_ext}")
+            self.logger.info(f"Loaded extension cog: {filename}")
 
         self.logger.info(f"Loaded {len(self.cogs)} cogs")
 
@@ -200,11 +205,12 @@ class Soteria(commands.Bot):
         self.logger.info(f"Connected to discord as {self.user}")
 
         # Load cogs
-        self._load_cogs("cogs")
+        self._load_cogs(Path(os.path.join(Path(__file__).parent, 'cogs')))
 
         # Init DB
         await self._init_db(self._DB_URI)
 
+        # Set Presence
         await self._set_presence(self.PRESENCE_TEXT)
 
         # This can only be set inside an async function
@@ -232,5 +238,5 @@ class Soteria(commands.Bot):
 
 if __name__ == "__main__":
     bot = Soteria()
-
+    
     bot.run(bot._DISCORD_TOKEN)

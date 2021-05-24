@@ -64,10 +64,14 @@ class Info(commands.Cog):
 
     @commands.command()
     async def info(self, ctx: commands.Context):
+        """Shows Info about bot"""
+
         await ctx.send("Not Implemented yet")
 
     @commands.command()
     async def status(self, ctx: commands.Context):
+        """Check Bot status in your server"""
+
         await ctx.send("Not Implemented yet")
     
 def setup(bot: commands.Bot):
