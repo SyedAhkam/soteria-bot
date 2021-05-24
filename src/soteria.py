@@ -87,11 +87,9 @@ class Soteria(commands.Bot):
             filename, ext = os.path.splitext(file)
 
             if not ext == ".py":
-                print('ext py')
                 continue
                 
             if filename in self.IGNORED_COGS:
-                print("ignored")
                 continue
 
             try:
