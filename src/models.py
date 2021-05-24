@@ -54,6 +54,8 @@ class Guild(Model):
         Guild owner's ID
     bot_prefix : str
         Bot prefix setting in the guild
+    verification_method: VerificationMethod
+        Verification Method setting in the guild
     """
 
     id = fields.BigIntField(pk=True)

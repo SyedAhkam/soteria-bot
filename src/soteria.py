@@ -144,7 +144,16 @@ class Soteria(commands.Bot):
             return commands.when_mentioned_or(self.DEFAULT_PREFIX)(self, message)
 
         # Else fetch the custom prefix for that guild
-        custom_prefix = (await Guild.get(id=message.guild.id)).get_bot_prefix()
+        custom_prefix = (
+            await Guild.get_or_create(
+                {
+                    "name": message.guild.name,
+                    "owner_id": message.guild.owner_id,
+                    "bot_prefix": self.DEFAULT_PREFIX,
+                },
+                id=message.guild.id,
+            )
+        )[0].get_bot_prefix()
 
         return commands.when_mentioned_or(custom_prefix)(self, message)
 
