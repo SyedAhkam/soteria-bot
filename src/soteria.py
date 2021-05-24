@@ -5,6 +5,8 @@ from pathlib import Path
 
 import aiohttp
 import discord
+import coloredlogs
+
 from discord.ext import commands
 from dotenv import load_dotenv
 from tortoise import Tortoise
@@ -39,6 +41,10 @@ class Soteria(commands.Bot):
 
         # Logs for obvious reasons
         self.logger = get_bot_logger()
+
+        #Color the logs
+        coloredlogs.install(logger=self.logger)
+
         self.logger.info("Starting up Soteria...")
 
         # Check if discord token is set, if not exit process

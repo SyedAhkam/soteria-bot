@@ -9,6 +9,7 @@ python-dotenv = "*"
 jishaku = "*"
 tortoise-orm = {extras=["asyncpg"], version="*"}
 discord-ext-menus = {git = "https://github.com/Rapptz/discord-ext-menus"}
+coloredlogs = "*"
 
 [dev-packages]
 black = "*"

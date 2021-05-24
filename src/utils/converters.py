@@ -1,4 +1,7 @@
 import json
+import os
+
+from pathlib import Path
 
 from discord.ext import commands
 
@@ -6,9 +9,15 @@ from models import VerificationMethod
 
 # Prevents the file to be read multiple times
 DISCORD_EMOJIS = None
-with open("../assets/discord_emojis.json") as f:
-    DISCORD_EMOJIS = json.load(f)
+#  with open("../assets/discord_emojis.json") as f:
+    #  DISCORD_EMOJIS = json.load(f)
 
+with open(os.path.join(
+    Path(__file__).parent.parent.parent,
+    'assets',
+    'discord_emojis.json'
+)) as f:
+    DISCORD_EMOJIS = json.load(f)
 
 class VerificationMethodConverter(commands.Converter):
     """Converts to `VerificationMethod` enum"""
