@@ -1,5 +1,11 @@
 # vscode junk
 .vscode/
+
+# Python junk
 __pycache__/
 
+# Ignore .env file
 .env
+
+# Ignore all log files
+*.log
