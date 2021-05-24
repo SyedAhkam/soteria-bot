@@ -42,7 +42,7 @@ class Soteria(commands.Bot):
         # Logs for obvious reasons
         self.logger = get_bot_logger()
 
-        #Color the logs
+        # Color the logs
         coloredlogs.install(logger=self.logger)
 
         self.logger.info("Starting up Soteria...")
@@ -88,13 +88,13 @@ class Soteria(commands.Bot):
         directory: str
             The directory path to load cogs from
         """
-        
+
         for file in os.listdir(directory):
             filename, ext = os.path.splitext(file)
 
             if not ext == ".py":
                 continue
-                
+
             if filename in self.IGNORED_COGS:
                 continue
 
@@ -194,7 +194,6 @@ class Soteria(commands.Bot):
             message
         )  # make sure other commands are processed after this event
 
-
     async def startup(self):
         """A custom `asyncio.Task` which runs on bot's initial bootup (startup)
 
@@ -209,7 +208,7 @@ class Soteria(commands.Bot):
         self.logger.info(f"Connected to discord as {self.user}")
 
         # Load cogs
-        self._load_cogs(Path(os.path.join(Path(__file__).parent, 'cogs')))
+        self._load_cogs(Path(os.path.join(Path(__file__).parent, "cogs")))
 
         # Init DB
         await self._init_db(self._DB_URI)
@@ -242,5 +241,5 @@ class Soteria(commands.Bot):
 
 if __name__ == "__main__":
     bot = Soteria()
-    
+
     bot.run(bot._DISCORD_TOKEN)

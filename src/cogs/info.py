@@ -45,7 +45,7 @@ class Info(commands.Cog):
         """Returns the invite link for bot
 
         Permissions snowflake is `268725312`
-        
+
         Permissions
         -----------
         - Manage Roles
@@ -93,7 +93,7 @@ class Info(commands.Cog):
             The challenge was: "One of us would code in Python and other in JS, And later we would judge each other's end-result" (no hate on languages)
             
             Unfortunately, Распутин's busy life did not allow him to pursue the afforementioned challenge-- Hence, The bot in production currently is the one coded by Syed.
-            """
+            """,
         )
         await ctx.send(embed=embed)
 
@@ -102,6 +102,7 @@ class Info(commands.Cog):
         """Check Bot status in your server"""
 
         await ctx.send("Not Implemented yet")
-    
+
+
 def setup(bot: commands.Bot):
     bot.add_cog(Info(bot))

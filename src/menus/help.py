@@ -3,6 +3,7 @@ import typing
 from discord.ext.menus import ListPageSource, MenuPages
 from discord.ext import commands
 
+
 class BotHelpMenu(ListPageSource):
     """Menu responsible for displaying cogs and their commands"""
 
@@ -27,7 +28,7 @@ class BotHelpMenu(ListPageSource):
         offset = (menu.current_page * self.per_page) + 1
         len_data = len(self.entries)
 
-        embed.set_author(name='Help', icon_url=self.ctx.bot.user.avatar_url)
+        embed.set_author(name="Help", icon_url=self.ctx.bot.user.avatar_url)
         embed.set_thumbnail(
             url=self.ctx.guild.icon_url
             if self.ctx.guild
@@ -57,8 +58,13 @@ class BotHelpMenu(ListPageSource):
 
     @staticmethod
     async def start_menu(ctx, cogs, filter_function):
-        menu = MenuPages(source=BotHelpMenu(ctx, cogs, filter_function), clear_reactions_after=True, timeout=60)
+        menu = MenuPages(
+            source=BotHelpMenu(ctx, cogs, filter_function),
+            clear_reactions_after=True,
+            timeout=60,
+        )
         await menu.start(ctx)
+
 
 class CogHelpMenu(ListPageSource):
     """Menu responsible for displaying commands under a cog"""
@@ -67,11 +73,15 @@ class CogHelpMenu(ListPageSource):
         super().__init__(data, per_page=10)
         self.ctx = ctx
 
-    async def _write_page(self, menu: MenuPages, commands: typing.Iterable[commands.Command]):
+    async def _write_page(
+        self, menu: MenuPages, commands: typing.Iterable[commands.Command]
+    ):
         offset = (menu.current_page * self.per_page) + 1
         len_data = len(self.entries)
 
-        embed = self.ctx.bot.embed_gen.get_normal_embed(title="Help", description=commands[0].cog.description)
+        embed = self.ctx.bot.embed_gen.get_normal_embed(
+            title="Help", description=commands[0].cog.description
+        )
         embed.set_thumbnail(
             url=self.ctx.guild.icon_url
             if self.ctx.guild
@@ -90,14 +100,14 @@ class CogHelpMenu(ListPageSource):
             )
         return embed
 
-    async def format_page(self, menu: MenuPages, entries: typing.Iterable[commands.Command]):
+    async def format_page(
+        self, menu: MenuPages, entries: typing.Iterable[commands.Command]
+    ):
         return await self._write_page(menu, entries)
 
     @staticmethod
     async def start_menu(ctx, commands: typing.Iterable[commands.Command]):
         menu = MenuPages(
-                source=CogHelpMenu(ctx, commands),
-                clear_reactions_after=True,
-                timeout=60.0
-            )
+            source=CogHelpMenu(ctx, commands), clear_reactions_after=True, timeout=60.0
+        )
         await menu.start(ctx)

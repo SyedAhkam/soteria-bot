@@ -419,7 +419,7 @@ class Verify(commands.Cog):
     )  # to prevent spam by same user
     async def verify(self, ctx: commands.Context, guild: discord.Guild = None):
         """Starts the verification process manually
-        
+
         This could be used when failed the first automatic attempt by the bot.
 
         **Arguments**
@@ -451,7 +451,9 @@ class Verify(commands.Cog):
         )
 
         if not verified_role_id:  # ignore if not set
-            return await ctx.send("Verified role is not set. Please contact the server admins.")
+            return await ctx.send(
+                "Verified role is not set. Please contact the server admins."
+            )
 
         verified_role = guild.get_role(verified_role_id)
         member = guild.get_member(ctx.author.id)  # ensure it's a member object
@@ -469,7 +471,10 @@ class Verify(commands.Cog):
         """Local command error handler for verify"""
 
         if isinstance(error, commands.GuildNotFound):
-            await ctx.send("Invalid guild provided.\nThis should be one of these: Guild ID, Guild Name (maybe)")
+            await ctx.send(
+                "Invalid guild provided.\nThis should be one of these: Guild ID, Guild Name (maybe)"
+            )
+
 
 def setup(bot: commands.Bot):
     bot.add_cog(Verify(bot))

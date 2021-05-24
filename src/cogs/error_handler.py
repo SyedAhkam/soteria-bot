@@ -14,11 +14,11 @@ class ErrorHandler(commands.Cog):
         self, ctx: commands.Context, error: commands.CommandError
     ):
         """Using on_command_error as an error handler."""
-        
+
         # Allows us to check for original exceptions raised and sent to CommandInvokeError.
         # If nothing is found. We keep the exception passed to on_command_error.
-        error = getattr(error, 'original', error)
-        
+        error = getattr(error, "original", error)
+
         # These exceptions would be ignored
         if isinstance(error, self.ignored):
             return
@@ -64,15 +64,13 @@ class ErrorHandler(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        
-
         if isinstance(error, commands.NoPrivateMessage):
-                embed = self.embed_gen.get_error_embed(
-                    title="No Private Message",
-                    description="Sorry, This command can't be used in private messages.",
-                )
-                await ctx.send(embed=embed)
-                return
+            embed = self.embed_gen.get_error_embed(
+                title="No Private Message",
+                description="Sorry, This command can't be used in private messages.",
+            )
+            await ctx.send(embed=embed)
+            return
 
         if isinstance(error, commands.PrivateMessageOnly):
             embed = self.embed_gen.get_error_embed(
@@ -165,17 +163,15 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-        
+
         if isinstance(error, commands.CheckFailure):
             embed = self.embed_gen.get_error_embed(
                 title="Check Failure",
-                description="Sorry, It doesn't seem like you're allowed to access this command."
+                description="Sorry, It doesn't seem like you're allowed to access this command.",
             )
             await ctx.send(embed=embed)
             return
-        
-        
-        
+
         if isinstance(error, commands.MissingRequiredArgument):
             embed = self.embed_gen.get_error_embed(
                 title="Missing Required Argument",
@@ -187,11 +183,11 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.ArgumentParsingError):
             embed = self.embed_gen.get_error_embed(
                 title="Aurgemnt Parsing error",
-                description="Sorry, I failed to parse your argument. Maybe check out the help command?"
+                description="Sorry, I failed to parse your argument. Maybe check out the help command?",
             )
             await ctx.send(embed=embed)
             return
-        
+
         if isinstance(error, commands.UnexpectedQuoteError):
             embed = self.embed_gen.get_error_embed(
                 title="Unexpected Quote Error",
@@ -231,15 +227,15 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-        
+
         if isinstance(error, commands.UserInputError):
             embed = self.embed_gen.get_error_embed(
                 title="Input Error",
-                description="Sorry, I failed to parse your input.\nMaybe the command expects a number and you provided a text instead?"
+                description="Sorry, I failed to parse your input.\nMaybe the command expects a number and you provided a text instead?",
             )
             await ctx.send(embed=embed)
             return
-        
+
         if isinstance(error, commands.CommandOnCooldown):
             embed = self.embed_gen.get_error_embed(
                 title="Command On Cooldown",
@@ -247,8 +243,6 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-
-               
 
         if isinstance(error, commands.ExtensionAlreadyLoaded):
             embed = self.embed_gen.get_error_embed(
@@ -288,19 +282,19 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-        
+
         if isinstance(error, commands.ExtensionError):
             embed = self.embed_gen.get_error_embed(
                 title="Extension Error",
                 description="Sorry, Failed to load extension.",
             )
             await ctx.send(embed=embed)
-            return 
-        
+            return
+
         if isinstance(error, commands.MaxConcurrencyReached):
-            embed=self.embed_gen.get_error_embed(
+            embed = self.embed_gen.get_error_embed(
                 title="Max Concurrency Reached",
-                description=f"Sorry, This command can only be used `{error.number}` times per `{error.per.name}`."
+                description=f"Sorry, This command can only be used `{error.number}` times per `{error.per.name}`.",
             )
             await ctx.send(embed=embed)
             return
@@ -308,15 +302,15 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.MessageNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Message Not Found",
-                description="Sorry, The message you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The message you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
-        
+
         if isinstance(error, commands.MemberNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Member Not Found",
-                description="Sorry, The member you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The member you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -324,7 +318,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.GuildNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Guild Not Found",
-                description="Sorry, The guild you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The guild you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -332,7 +326,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.UserNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="User Not Found",
-                description="Sorry, The user you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The user you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -340,7 +334,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.ChannelNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Channel Not Found",
-                description="Sorry, The channel you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The channel you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -348,7 +342,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.RoleNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Role Not Found",
-                description="Sorry, The role you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The role you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -356,7 +350,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.EmojiNotFound):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Emoji Not Found",
-                description="Sorry, The emoji you provided was not found.\nInput: {error.argument}"
+                description="Sorry, The emoji you provided was not found.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -364,7 +358,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.ChannelNotReadable):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Channel not readable",
-                description="Sorry, This channel is not readable by me. Please provide me appropriate permissions.\nInput: {error.argument}"
+                description="Sorry, This channel is not readable by me. Please provide me appropriate permissions.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -372,7 +366,7 @@ class ErrorHandler(commands.Cog):
         if isinstance(error, commands.BadColourArgument):
             embed = self.bot.embed_gen.get_error_embed(
                 title="Bad Color Argument",
-                description="Sorry, This color is invalid.\nInput: {error.argument}"
+                description="Sorry, This color is invalid.\nInput: {error.argument}",
             )
             await ctx.send(embed=embed)
             return
@@ -385,7 +379,7 @@ class ErrorHandler(commands.Cog):
             await ctx.send(f"```py\n{error.__class__.__name__}: {str(error)}\n```")
             raise error
             return
-        
+
         # Else dm owner
         embed = self.embed_gen.get_error_embed(
             title="Unexpected Error",
@@ -400,6 +394,7 @@ class ErrorHandler(commands.Cog):
         )
 
         raise error
+
 
 def setup(bot):
     bot.add_cog(ErrorHandler(bot))

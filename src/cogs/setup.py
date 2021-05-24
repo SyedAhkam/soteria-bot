@@ -4,7 +4,8 @@ from discord.ext import commands
 from models import Config, ConfigType, Guild
 from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
 
-#TODO: setup command
+# TODO: setup command
+
 
 class Setup(commands.Cog):
     """Configure the bot here"""
@@ -23,7 +24,7 @@ class Setup(commands.Cog):
     @set.command()
     async def prefix(self, ctx: commands.Context, *, new_prefix):
         """Sets the bot prefix
-        
+
         **Arguments**
         --------------
         `new_prefix`: str
@@ -34,9 +35,7 @@ class Setup(commands.Cog):
 
         await ctx.send(f"Prefix set to `{new_prefix}`")
 
-    @set.command(
-        aliases=['verification-method', 'vm']
-    )
+    @set.command(aliases=["verification-method", "vm"])
     async def verification_method(
         self, ctx: commands.Context, new_method: VerificationMethodConverter
     ):
@@ -58,16 +57,14 @@ class Setup(commands.Cog):
 
         await ctx.send(f"Verification Method set to `{new_method}`")
 
-    @set.command(
-        aliases=['verification-channel', 'vc']
-    )
+    @set.command(aliases=["verification-channel", "vc"])
     async def verification_channel(
         self, ctx: commands.Context, channel: discord.TextChannel
     ):
         """Sets the verification channel
 
         This channel is used while verification method is set to DM.
-        
+
         **Arguments**
         --------------
         `channel`: discord channel
@@ -87,14 +84,12 @@ class Setup(commands.Cog):
         )
         await ctx.send(f"Set `{channel}` as verification channel.")
 
-    @set.command(
-        aliases=['verified-role', 'vr']
-    )
+    @set.command(aliases=["verified-role", "vr"])
     async def verified_role(self, ctx: commands.Context, role: discord.Role):
         """Sets the verified role
 
         This role is added to users after they successfully complete verification.
-        
+
         **Arguments**
         --------------
         `role`: discord role
@@ -112,14 +107,12 @@ class Setup(commands.Cog):
         await Config.set_value_int(guild_obj, ConfigType.VERIFIED_ROLE, role.id)
         await ctx.send(f"Set `{role}` as verified role.")
 
-    @set.command(
-        aliases=['verification-start-message', 'vstm']
-    )
+    @set.command(aliases=["verification-start-message", "vstm"])
     async def verification_start_message(self, ctx: commands.Context, *, message: str):
         """Sets the verification start message
 
         This could be customized to show users a customized message on verification start.
-        
+
         Some placeholders could be used to personalize the message (list below)
 
         **Arguments**
@@ -149,16 +142,14 @@ class Setup(commands.Cog):
         )
         await ctx.send(f"Set the verification start message as: ```\n{message}\n```")
 
-    @set.command(
-        aliases=['verification-success-message', 'vscm']
-    )
+    @set.command(aliases=["verification-success-message", "vscm"])
     async def verification_success_message(
         self, ctx: commands.Context, *, message: str
     ):
         """Sets the verification success message
 
         This could be customized to show users a customized message upon successful verification attempt.
-        
+
         Some placeholders could be used to personalize the message (list below)
 
         **Arguments**
@@ -191,9 +182,7 @@ class Setup(commands.Cog):
         )
         await ctx.send(f"Set the verification success message as: ```\n{message}\n```")
 
-    @set.command(
-        aliases=['reaction-channel', 'rc']
-    )
+    @set.command(aliases=["reaction-channel", "rc"])
     async def reaction_channel(
         self, ctx: commands.Context, channel: discord.TextChannel
     ):
@@ -218,14 +207,12 @@ class Setup(commands.Cog):
         await Config.set_value_int(guild_obj, ConfigType.REACTION_CHANNEL, channel.id)
         await ctx.send(f"Set `{channel}` as reaction channel.")
 
-    @set.command(
-        aliases=['reaction-message', 'rm']
-    )
+    @set.command(aliases=["reaction-message", "rm"])
     async def reaction_message(
         self, ctx: commands.Context, message: discord.Message
     ):  # FIXME: converting to `discord.Message` could have some caching issues
         """Sets the reaction message
-        
+
         This enables the bot to check for reactions only on this message.
 
         **Arguments**
@@ -257,12 +244,10 @@ class Setup(commands.Cog):
 
         await message.add_reaction(emoji)
 
-    @set.command(
-        aliases=['reaction-emoji', 're']
-    )
+    @set.command(aliases=["reaction-emoji", "re"])
     async def reaction_emoji(self, ctx: commands.Context, emoji: UnicodeEmojiConverter):
         """Sets the reaction emoji
-        
+
         This enables the bot to respond to reaction events only when the emoji matches.
 
         **Arguments**
