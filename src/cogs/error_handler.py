@@ -64,12 +64,7 @@ class ErrorHandler(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        if isinstance(error, commands.CheckFailure):
-            embed = self.embed_gen.get_error_embed(
-                title="Check Failure",
-                description="Sorry, It doesn't seem like you're allowed to access this command."
-            )
-            await ctx.send(embed=embed)
+        
 
         if isinstance(error, commands.NoPrivateMessage):
                 embed = self.embed_gen.get_error_embed(
@@ -170,14 +165,16 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-
-        if isinstance(error, commands.UserInputError):
+        
+        if isinstance(error, commands.CheckFailure):
             embed = self.embed_gen.get_error_embed(
-                title="Input Error",
-                description="Sorry, I failed to parse your input.\nMaybe the command expects a number and you provided a text instead?"
+                title="Check Failure",
+                description="Sorry, It doesn't seem like you're allowed to access this command."
             )
             await ctx.send(embed=embed)
             return
+        
+        
         
         if isinstance(error, commands.MissingRequiredArgument):
             embed = self.embed_gen.get_error_embed(
@@ -234,7 +231,15 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-
+        
+        if isinstance(error, commands.UserInputError):
+            embed = self.embed_gen.get_error_embed(
+                title="Input Error",
+                description="Sorry, I failed to parse your input.\nMaybe the command expects a number and you provided a text instead?"
+            )
+            await ctx.send(embed=embed)
+            return
+        
         if isinstance(error, commands.CommandOnCooldown):
             embed = self.embed_gen.get_error_embed(
                 title="Command On Cooldown",
@@ -243,13 +248,7 @@ class ErrorHandler(commands.Cog):
             await ctx.send(embed=embed)
             return
 
-        if isinstance(error, commands.ExtensionError):
-            embed = self.embed_gen.get_error_embed(
-                title="Extension Error",
-                description="Sorry, Failed to load extension.",
-            )
-            await ctx.send(embed=embed)
-            return        
+               
 
         if isinstance(error, commands.ExtensionAlreadyLoaded):
             embed = self.embed_gen.get_error_embed(
@@ -289,11 +288,19 @@ class ErrorHandler(commands.Cog):
             )
             await ctx.send(embed=embed)
             return
-
+        
+        if isinstance(error, commands.ExtensionError):
+            embed = self.embed_gen.get_error_embed(
+                title="Extension Error",
+                description="Sorry, Failed to load extension.",
+            )
+            await ctx.send(embed=embed)
+            return 
+        
         if isinstance(error, commands.MaxConcurrencyReached):
-            embed=self.embed_gen.get_error_ember(
+            embed=self.embed_gen.get_error_embed(
                 title="Max Concurrency Reached",
-                description=f"Sorry, This command can only be used by `{error.number}` user(s) at a time."
+                description=f"Sorry, This command can only be used `{error.number}` times per `{error.per.name}`."
             )
             await ctx.send(embed=embed)
             return
