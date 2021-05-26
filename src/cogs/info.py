@@ -43,6 +43,14 @@ class Info(commands.Cog):
         )
 
     @commands.command()
+    async def support(self, ctx: commands.Context):
+        """Returns the support server invite-link"""
+
+        await ctx.send(
+            "https://discord.gg/y3A9DFyjhV"
+        )
+
+    @commands.command()
     async def invite(self, ctx: commands.Context):
         """Returns the invite link for bot
 
