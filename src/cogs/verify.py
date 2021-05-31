@@ -347,20 +347,17 @@ class Verify(commands.Cog):
 
         guild_obj = await Guild.get_or_none(id=guild.id)
         if not guild_obj:
-            self.bot.logger.warn(f"Ignored guild_obj")
             return
 
         if (
             not guild_obj.verification_method == VerificationMethod.REACTION
         ):  # if verification method is not REACTION; return
-            self.bot.logger.warn(f"Ignored verification_method")
             return
 
         reaction_channel_id = await Config.get_value_int(
             guild_obj, ConfigType.REACTION_CHANNEL
         )
         if not reaction_channel_id:
-            self.bot.logger.warn(f"Ignored reaction channel")
             return
 
         if (
@@ -374,7 +371,6 @@ class Verify(commands.Cog):
         if (
             not message_id == reaction_message
         ):  # check if message is the same as reaction message in db
-            self.bot.logger.warn(f"Ignored reaction message")
             return
 
         is_unicode = await Config.get_value_bool(guild_obj, ConfigType.REACTION_EMOJI)
