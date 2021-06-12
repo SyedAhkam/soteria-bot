@@ -94,7 +94,7 @@ class Info(commands.Cog):
 
             **Developed By**
             ----------------
-            - SyedAhkam#5085 (Bot Developer)
+            - Syed#5085 (Bot Developer)
             - Распутин#0962 (General Idea and captcha API)
 
             **Interesting Fact**
