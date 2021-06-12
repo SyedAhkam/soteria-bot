@@ -186,6 +186,9 @@ class Soteria(commands.Bot):
         if message.author == self.user:  # ignore, if the message by the bot itself
             return
 
+        if message.author.bot:  # ignore if message author is a bot
+            return
+
         if len(message.mentions) > 1:  # ignore, if more than 1 mentions
             await self.process_commands(message)
             return

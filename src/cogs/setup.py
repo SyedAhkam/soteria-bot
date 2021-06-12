@@ -4,9 +4,9 @@ from discord.ext import commands
 from models import Config, ConfigType, Guild
 from utils.converters import UnicodeEmojiConverter, VerificationMethodConverter
 
-# TODO: setup command
 # TODO: reset commmand or allow users to pass in None
 # TODO: Test commands
+# FIXME: cache issue in reaction method
 
 
 class Setup(commands.Cog):

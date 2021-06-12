@@ -8,6 +8,9 @@ from captcha import Captcha
 from models import Config, ConfigType, Guild, VerificationMethod
 from utils.extras import format_placeholders
 
+# TODO: verification logging
+# FIXME: role permssions check in verify command
+
 
 class Verify(commands.Cog):
     """Main verification"""
