@@ -10,7 +10,7 @@ class Captcha:
     """Encapsulates all the captcha logic"""
 
     # Constants
-    captcha_gen_endpoint = "captcha"
+    captcha_gen_endpoint = "generate"
     captcha_verify_endpoint = "verify"
 
     def __init__(self):
@@ -44,7 +44,7 @@ class Captcha:
     async def verify(self, user_response: str) -> bool:
         """Verifies the instance with user response"""
 
-        async with self.aio_session.get(
+        async with self.aio_session.post(
             self.captcha_api_base_url + self.captcha_verify_endpoint,
             json={"uuid": self.captcha_uuid, "captcha": user_response},
         ) as resp:
