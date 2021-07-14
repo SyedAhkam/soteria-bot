@@ -21,7 +21,8 @@ class Setup(commands.Cog):
     async def set(self, ctx: commands.Context):
         """Group of commands to customize the bot's behaviour"""
 
-        pass
+        if not ctx.invoked_subcommand:
+            await ctx.send_help(self.set)
 
     @set.command()
     async def prefix(self, ctx: commands.Context, *, new_prefix):
