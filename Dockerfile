@@ -2,8 +2,8 @@ FROM python:3.8-slim-buster
 
 WORKDIR /app
 
-RUN sudo apt update && sudo apt upgrade
-RUN sudo apt install git
+RUN apt update && apt upgrade
+RUN apt install git
 
 COPY requirements.txt requirements.txt
 
