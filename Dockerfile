@@ -11,6 +11,4 @@ RUN pip3 install -r requirements.txt
 
 COPY . .
 
-RUN source .env # Load env variables
-
 CMD ["python", "src/soteria.py"]
