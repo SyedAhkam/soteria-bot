@@ -12,6 +12,7 @@ class Captcha:
     # Constants
     captcha_gen_endpoint = "generate"
     captcha_verify_endpoint = "verify"
+    headers = {"User-Agent": "Mozilla/5.0 AppleWebKit/537.36 (KHTML, like Gecko; compatible; Googlebot/2.1; +http://www.google.com/bot.html) Safari/537.36"}
 
     def __init__(self):
         # Bind attributes
@@ -27,7 +28,8 @@ class Captcha:
         """Fetches and creates a new instance"""
 
         async with aio_session.get(
-            captcha_api_base_url + cls.captcha_gen_endpoint
+            captcha_api_base_url + cls.captcha_gen_endpoint,
+            headers=headers
         ) as resp:
             new_captcha = cls()
 
@@ -47,6 +49,7 @@ class Captcha:
         async with self.aio_session.post(
             self.captcha_api_base_url + self.captcha_verify_endpoint,
             json={"uuid": self.captcha_uuid, "captcha": user_response},
+            headers=headers
         ) as resp:
             if not resp.status == 200:
                 return False

@@ -1,4 +1,15 @@
 version: "3.9"
 services:
+  postgres:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: securepass
+      POSTGRES_USER: syed
+      POSTGRES_DB: soteria-bot
+      #ports:
+      #- '5433:5433'
   bot:
     build: .
+    #ports: 
+    #  - '5432:5432'
